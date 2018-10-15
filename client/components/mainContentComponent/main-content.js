@@ -50,27 +50,27 @@ Vue.component('main-content', {
                         <center><p><b> ITEM ID : </b> {{sId}} </p></center>
                         <div class="form-group">
                             <label for="inputdefault">Name</label>
-                            <input class="form-control" id="inputdefault" type="text" v-model='sName'>
+                            <input class="form-control" type="text" v-model='sName'>
                         </div>
                         <div class="form-group">
                             <label for="inputlg">Description</label>
-                            <input class="form-control input-lg" id="inputlg" type="text" v-model='sDescription'>
+                            <input class="form-control input-lg" type="text" v-model='sDescription'>
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Price</label>
-                            <input class="form-control" id="inputdefault" type="number" v-model='sPrice'>
+                            <input class="form-control" type="number" v-model='sPrice'>
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Image</label>
-                            <input class="form-control" id="inputdefault" type="text" v-model='sImage'>
+                            <input class="form-control" type="text" v-model='sImage'>
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Stock</label>
-                            <input class="form-control" id="inputdefault" type="number" v-model='sStock'>
+                            <input class="form-control" type="number" v-model='sStock'>
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Category</label>
-                            <input class="form-control" id="inputdefault" type="text" v-model='sCategory'>
+                            <input class="form-control" type="text" v-model='sCategory'>
                         </div>
                     </form>
                 </div>
@@ -123,19 +123,19 @@ Vue.component('main-content', {
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Price</label>
-                            <input class="form-control" id="inputdefault" type="number" v-model='newPrice'>
+                            <input class="form-control" type="number" v-model='newPrice'>
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Image</label>
-                            <input class="form-control" id="inputdefault" type="text" v-model='newImage'>
+                            <input class="form-control" type="file" v-on:change="getImageAdd($event)">
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Stock</label>
-                            <input class="form-control" id="inputdefault" type="number" v-model='newStock'>
+                            <input class="form-control" type="number" v-model='newStock'>
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Category</label>
-                            <input class="form-control" id="inputdefault" type="text" v-model='newCategory'>
+                            <input class="form-control" type="text" v-model='newCategory'>
                         </div>
                     </form>
                 </div>
@@ -166,6 +166,8 @@ Vue.component('main-content', {
             sImage : '',
             sStock : '',
             sCategory : '',
+
+            addPicture : '',
 
             newName : '',
             newDescription : '',
@@ -277,7 +279,6 @@ Vue.component('main-content', {
             })
             .then(response => {
                 self.event = response.data
-                console.log(response.data)
             })
             .catch(err => {
                 console.log(err)
@@ -298,43 +299,55 @@ Vue.component('main-content', {
                 console.log(err)
             })
         },
+        getImageAdd(link) {
+            this.addPicture = link.target.files[0];
+        }
+        ,
         addItem : function(){
 
-            console.log('masuk ke add Item')
-            let name = this.newName
-            let description = this.newDescription
-            let price = this.newPrice
-            let img = this.newImage
-            let stock = this.newStock
-            let categoryId = this.newCategory
+            let formdata = new FormData()
+            formdata.append('image', this.addPicture);
 
-            let data = {
-                name,
-                description,
-                price,
-                img,
-                stock,
-                categoryId
-            }
-            console.log('data yang dikirim',data)
-
-            let self = this
-
-            axios({
-                method: 'POST',
-                url: `http://localhost:3000/items/create`,
-                data
+            axios.post(`http://localhost:3000/upload`, formdata, {
+                
             })
-            .then(response => {
-                self.newName = ''
-                self.newDescription = ''
-                self.newPrice = ''
-                self.newImage = ''
-                self.newStock = ''
-                self.newCategory = ''
+            .then((response)=>{
+                console.log('respon UPLOAD : ')
+                console.log(response.data.link)
 
-                console.log(response.data)
-                self.event = response.data
+                let name = this.newName
+                let description = this.newDescription
+                let price = this.newPrice
+                let img = response.data.link
+                let stock = this.newStock
+                let categoryId = this.newCategory
+
+                let data = {
+                    name,
+                    description,
+                    price,
+                    img,
+                    stock,
+                    categoryId
+                }
+
+                let self = this
+
+                axios({
+                    method: 'POST',
+                    url: `http://localhost:3000/items/create`,
+                    data
+                })
+                .then(response => {
+                    self.newName = ''
+                    self.newDescription = ''
+                    self.newPrice = ''
+                    self.addImage = ''
+                    self.newStock = ''
+                    self.newCategory = ''
+
+                    self.event = response.data
+                })
             })
             .catch(err => {
                 console.log(err)

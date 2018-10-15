@@ -133,9 +133,6 @@ Vue.component('nav-bar',{
                     <a class="btn btn-success btn-sm ml-3" data-toggle="modal" data-target="#registModal" v-if='islogin === false'>
                         <i class="fa fa-sign-in-alt"></i> Register
                     </a>
-                    <a class="btn btn-success btn-sm ml-3" data-toggle="modal" data-target="#loginModal" v-if='isadmin === true'>
-                        <i class="fa fa-sign-in-alt"></i> Add New Item
-                    </a>
                     <a class="btn btn-success btn-sm ml-3" v-if='islogin === true' v-on:click="signout">
                         <i class="fa fa-sign-in-alt"></i> Signout
                     </a>

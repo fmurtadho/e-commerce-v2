@@ -1,12 +1,10 @@
+const express = require('express')
 const router = require('express').Router()
-const router = express.Router()
 const images = require('../helpers/images')
 
 router.get('/',(req,res)=>{
     res.status(201).json({
-        message : `
-        Hello
-        `
+        message : 'Hello from index'
     })
 })
 

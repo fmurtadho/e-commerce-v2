@@ -40,7 +40,6 @@ class Controller {
             _id: req.params.id
         })
         .then(function (item) {
-            console.log(item)
             res.status(201).json(item)
         })
         .catch(function (err) {
