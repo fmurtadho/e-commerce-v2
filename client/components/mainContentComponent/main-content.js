@@ -119,7 +119,7 @@ Vue.component('main-content', {
                         </div>
                         <div class="form-group">
                             <label for="inputlg">Description</label>
-                            <input class="form-control input-lg" id="inputlg" type="text" v-model='newDescription'>
+                            <textarea class="form-control" rows="4" v-model='newDescription'></textarea>
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Price</label>
@@ -127,7 +127,7 @@ Vue.component('main-content', {
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Image</label>
-                            <input class="form-control" type="file" v-on:change="getImageAdd($event)">
+                            <input class="form-control-file" type="file" v-on:change="getImageAdd($event)">
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Stock</label>
@@ -293,7 +293,6 @@ Vue.component('main-content', {
             })
             .then(response => {
                 self.event = response.data
-                console.log(response.data)
             })
             .catch(err => {
                 console.log(err)
@@ -312,8 +311,6 @@ Vue.component('main-content', {
                 
             })
             .then((response)=>{
-                console.log('respon UPLOAD : ')
-                console.log(response.data.link)
 
                 let name = this.newName
                 let description = this.newDescription
