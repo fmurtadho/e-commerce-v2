@@ -180,7 +180,9 @@ Vue.component('main-content', {
         }
     },
     created: function () {
+        this.checkToken()
         this.getAllItems()
+        console.log()
     },
     watch : {
         islogin : function(val){
@@ -206,6 +208,22 @@ Vue.component('main-content', {
             })
 
         },
+        checkToken : function(){
+            let token = localStorage.getItem('token')
+            let admin = localStorage.getItem('admin')
+
+            console.log(token)
+            console.log(admin)
+            
+            if(token){
+                this.islogin = true
+            }
+
+            if(admin){
+                this.isadmin = true
+            }
+        }
+        ,
         addItemToCart: function (index) {
 
             this.cartsBadge = this.cartsBadge + 1
@@ -298,7 +316,7 @@ Vue.component('main-content', {
                     })
 
                 })
-                  
+
             }else{
                 let name = this.sName
                 let description = this.sDescription

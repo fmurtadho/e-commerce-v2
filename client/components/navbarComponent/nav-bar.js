@@ -35,8 +35,11 @@ Vue.component('nav-bar',{
                 data
             })
             .then(function (response) {
-                // console.log(response.data)
+                console.log(response.data)
+
                 localStorage.setItem('token', response.data.token)
+                localStorage.setItem('admin',response.data.isAdmin)
+
                 if(response.data.isAdmin === true){
                     self.isadmin = true
                 }
@@ -52,6 +55,7 @@ Vue.component('nav-bar',{
         },
         signout : function(){
             localStorage.removeItem('token')
+            localStorage.removeItem('admin')
             this.islogin = false
             this.isadmin = false
             this.$emit('islogin-data',this.islogin)
@@ -91,8 +95,27 @@ Vue.component('nav-bar',{
         },
         signupSuccessFalse : function(){
             this.signupSuccess = false
+        },
+        checkToken : function(){
+            let token = localStorage.getItem('token')
+            let admin = localStorage.getItem('admin')
+
+            console.log(token)
+            console.log(admin)
+            
+            if(token){
+                this.islogin = true
+            }
+
+            if(admin){
+                this.isadmin = true
+            }
         }
     },
+    created : function() {
+        this.checkToken()
+    }
+    ,
     template : `
     <div>
 

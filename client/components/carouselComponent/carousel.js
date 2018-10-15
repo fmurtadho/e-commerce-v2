@@ -1,5 +1,4 @@
 Vue.component('carousel-content',{
-    props : ['testo'],
     template : `
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="margin-bottom: 30px">
         <ol class="carousel-indicators">
