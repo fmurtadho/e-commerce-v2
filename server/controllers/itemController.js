@@ -58,7 +58,7 @@ class Controller {
             price: req.body.price,
             img: req.body.img,
             stock : req.body.stock,
-            category : req.body.category
+            category : req.body.categoryId
         })
         .then(function (item) {
             res.status(200).json({

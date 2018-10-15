@@ -62,7 +62,7 @@ Vue.component('main-content', {
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Image</label>
-                            <input class="form-control" type="text" v-model='sImage'>
+                            <input class="form-control-file" type="file" v-on:change="replaceImage($event)">
                         </div>
                         <div class="form-group">
                             <label for="inputdefault">Stock</label>
@@ -169,6 +169,8 @@ Vue.component('main-content', {
 
             addPicture : '',
 
+            changeImage : '',
+
             newName : '',
             newDescription : '',
             newPrice : '',
@@ -246,7 +248,7 @@ Vue.component('main-content', {
                 this.sImage = result.data.img
                 this.sStock = result.data.stock
                 this.sCategory = result.data.category
-                this.$emit('selected-data',this.selected)
+                this.changeImage = result.data.img
             })
             .catch(err => {
                 console.log(err)
@@ -254,35 +256,81 @@ Vue.component('main-content', {
 
         },
         updateItem : function() {
-            let name = this.sName
-            let description = this.sDescription
-            let price = this.sPrice
-            let img = this.sImage
-            let stock = this.sStock
-            let categoryId = this.sCategory
+            
+            if(this.sImage !== this.changeImage){
 
-            let data = {
-                name,
-                description,
-                price,
-                img,
-                stock,
-                categoryId
+                let formdata = new FormData()
+                formdata.append('image', this.changeImage);
+
+                axios.post(`http://localhost:3000/upload`, formdata, {
+                
+                })
+                .then((response)=>{
+
+                    let name = this.sName
+                    let description = this.sDescription
+                    let price = this.sPrice
+                    let img = response.data.link
+                    let stock = this.sStock
+                    let categoryId = this.sCategory
+
+                    let data = {
+                        name,
+                        description,
+                        price,
+                        img,
+                        stock,
+                        categoryId
+                    }
+
+                    let self = this
+
+                    axios({
+                        method: 'PUT',
+                        url: `http://localhost:3000/items/update/${self.sId}`,
+                        data
+                    })
+                    .then(response => {
+                        self.event = response.data
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+
+                })
+                  
+            }else{
+                let name = this.sName
+                let description = this.sDescription
+                let price = this.sPrice
+                let img = this.sImage
+                let stock = this.sStock
+                let categoryId = this.sCategory
+
+                let data = {
+                    name,
+                    description,
+                    price,
+                    img,
+                    stock,
+                    categoryId
+                }
+
+                let self = this
+
+                axios({
+                    method: 'PUT',
+                    url: `http://localhost:3000/items/update/${self.sId}`,
+                    data
+                })
+                .then(response => {
+                    self.event = response.data
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             }
-
-            let self = this
-
-            axios({
-                method: 'PUT',
-                url: `http://localhost:3000/items/update/${self.sId}`,
-                data
-            })
-            .then(response => {
-                self.event = response.data
-            })
-            .catch(err => {
-                console.log(err)
-            })
+            
         },
         deleteItem : function(){
             let self = this
@@ -300,6 +348,9 @@ Vue.component('main-content', {
         },
         getImageAdd(link) {
             this.addPicture = link.target.files[0];
+        },
+        replaceImage(link) {
+            this.changeImage = link.target.files[0]
         }
         ,
         addItem : function(){
